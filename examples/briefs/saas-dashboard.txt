@@ -1,0 +1,16 @@
+Hey there,
+
+I'm the founder of a B2B SaaS called Plotline that helps small agencies track project profitability. We have a working backend API but our customer-facing dashboard is a mess of old jQuery pages, and I want it rebuilt in Next.js (App Router, TypeScript, Tailwind).
+
+The designs are done in Figma, 14 screens including login, onboarding, project list, project detail with profitability charts, team view, invoices and settings. I will share the file once we start.
+
+Auth and data should use Supabase (we already have a project set up with Postgres tables). Billing needs to go through Stripe: subscription plans with monthly and annual pricing, a customer portal link, and webhooks that update the plan status in Supabase. Users should be able to upgrade and downgrade themselves.
+
+Charts need to be fast with a few thousand rows. I would like role-based access (owner, manager, viewer) and a CSV export on the projects table. Dark mode would be nice but is not critical.
+
+Deployment is on Vercel. I need to be live in 5 weeks because we have a customer demo then, and I am hoping to keep things around $6,000 but I can be a little flexible if the scope really needs it.
+
+Oh, and it would be great if you could also fix a few bugs in our current API while you are in there. I'll send a list.
+
+Cheers,
+Daniel

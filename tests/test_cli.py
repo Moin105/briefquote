@@ -1,0 +1,41 @@
+import json
+from pathlib import Path
+
+from briefquote import cli
+from briefquote.llm import FakeClient
+
+ROOT = Path(__file__).parent.parent
+SAMPLE_TEXT = (ROOT / "examples" / "sample_extraction.json").read_text(encoding="utf-8")
+
+
+def test_doctor_absent(monkeypatch, capsys):
+    monkeypatch.setenv("OLLAMA_HOST", "127.0.0.1:9")
+    code = cli.main(["doctor"])
+    out = capsys.readouterr().out
+    assert code == 1
+    assert "ollama pull" in out
+
+
+def test_doctor_healthy(monkeypatch, capsys):
+    monkeypatch.setattr(
+        cli.OllamaClient,
+        "health",
+        lambda self: {"reachable": True, "models": ["gemma3:4b"], "model_present": True},
+    )
+    assert cli.main(["doctor"]) == 0
+
+
+def test_extract_prints_json(monkeypatch, capsys):
+    monkeypatch.setattr(cli, "OllamaClient", lambda model=None: FakeClient([SAMPLE_TEXT]))
+    code = cli.main(["extract", str(ROOT / "examples" / "briefs" / "saas-dashboard.txt")])
+    out = capsys.readouterr().out
+    assert code == 0
+    assert json.loads(out)["project_type"] == "web"
+
+
+def test_extract_ollama_absent_clean_error(monkeypatch, capsys):
+    monkeypatch.setenv("OLLAMA_HOST", "127.0.0.1:9")
+    code = cli.main(["extract", str(ROOT / "examples" / "briefs" / "saas-dashboard.txt")])
+    err = capsys.readouterr().err
+    assert code == 1
+    assert "ollama pull" in err

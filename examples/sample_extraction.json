@@ -1,0 +1,33 @@
+{
+  "summary": "Rebuild a B2B SaaS customer dashboard in Next.js from existing Figma designs, with Supabase auth/data and Stripe subscription billing.",
+  "project_type": "web",
+  "deliverables": [
+    "Next.js (App Router, TypeScript, Tailwind) dashboard implementing 14 Figma screens",
+    "Supabase authentication and data integration",
+    "Stripe subscriptions with customer portal and webhooks",
+    "Role-based access (owner, manager, viewer)",
+    "CSV export on the projects table",
+    "Profitability charts performant with a few thousand rows",
+    "Vercel deployment"
+  ],
+  "tech_stack": ["Next.js", "TypeScript", "Tailwind", "Supabase", "Postgres", "Stripe", "Vercel", "Figma"],
+  "complexity": 4,
+  "integrations_count": 2,
+  "has_design_provided": true,
+  "has_clear_requirements": true,
+  "unknowns": [
+    "Which Stripe plans and prices exist, and how are plan limits enforced?",
+    "What are the Supabase table schemas and are row-level security policies already defined?",
+    "How many and which bugs are in the existing API, and is that in scope?",
+    "Is dark mode in the Figma designs?",
+    "Which charting requirements and interactions are expected?"
+  ],
+  "risk_flags": [
+    "Unspecified API bug fixes could expand scope",
+    "5-week deadline tied to a customer demo",
+    "Dark mode described as nice-to-have but not defined",
+    "Budget described as flexible, which may signal scope creep"
+  ],
+  "client_timeline_days": 35,
+  "budget_mentioned_usd": 6000.0
+}

@@ -1,0 +1,14 @@
+Hi,
+
+I run a small Shopify store selling handmade ceramic mugs and planters. We have about 400 products and writing the descriptions by hand is killing me. I want an AI tool that generates product descriptions for us automatically. Ideally I upload a CSV with the product name, materials and a few keywords, and it gives me back a description for each product that sounds like our brand (warm, a bit playful, never salesy).
+
+It should also write the SEO title and meta description for each product. It would be great if it could push the results straight into Shopify so I don't have to copy and paste, but if that's too much we can start with just a CSV export.
+
+I don't want to pay for ChatGPT API calls every time, so if there's a way to run it cheaply that would be amazing. My cousin said something about local models?
+
+Some of our products are sold in German and French too, so maybe it can handle translations at some point. Also I might want it to write Instagram captions later.
+
+I'd like to see something working in a couple of weeks because we're launching the autumn collection soon. Happy to discuss budget once I know what's involved. Please tell me how you would approach it and what you would need from me.
+
+Thanks,
+Marta

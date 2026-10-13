@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "briefquote"
+version = "0.1.0"
+description = "Local scope-and-quote tool for freelancers, powered by open-weight models via Ollama."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = ["pydantic>=2", "requests"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+briefquote = "briefquote.cli:main"
+
+[tool.setuptools]
+packages = ["briefquote"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

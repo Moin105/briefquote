@@ -1,0 +1,14 @@
+Hello,
+
+We are a dental clinic with three dentists and about 1,800 active patients. Our reception team spends a huge part of the day calling patients to remind them about appointments, and we still get a lot of no-shows. We would like a WhatsApp bot that sends appointment reminders automatically and lets patients confirm, cancel or reschedule by replying.
+
+Right now our appointments live in a system called DentFlow, I think it has some kind of export but I am not sure about an API. The receptionist would know more. The reminders should go out the day before and maybe again two hours before the visit. Patients should also be able to ask simple things like opening hours, address and whether we take their insurance.
+
+It must be GDPR compliant because we handle patient data, and nothing should be sent to anyone without consent. We would also like a simple page where the front desk can see which patients confirmed and which did not.
+
+Eventually we would like the bot to take new bookings from people who have never been to the clinic, and maybe send follow-up messages after treatments with aftercare tips.
+
+We do not have a fixed deadline but the sooner the better, ideally before the end of the year. We have not set a budget yet and would like to hear your suggestion first.
+
+Regards,
+Dr. Keller's practice
