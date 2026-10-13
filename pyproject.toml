@@ -9,10 +9,11 @@ description = "Local scope-and-quote tool for freelancers, powered by open-weigh
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
-dependencies = ["pydantic>=2", "requests"]
+dependencies = ["pydantic>=2", "requests", "numpy", "pandas"]
 
 [project.optional-dependencies]
 dev = ["pytest"]
+estimator = ["tabpfn>=2"]
 
 [project.scripts]
 briefquote = "briefquote.cli:main"
@@ -22,3 +23,4 @@ packages = ["briefquote"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["slow: loads the real TabPFN model (needs weights, slow on CPU)"]

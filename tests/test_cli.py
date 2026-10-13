@@ -39,3 +39,26 @@ def test_extract_ollama_absent_clean_error(monkeypatch, capsys):
     err = capsys.readouterr().err
     assert code == 1
     assert "ollama pull" in err
+
+
+def test_estimate_no_tabpfn_json(capsys):
+    code = cli.main(["estimate", str(ROOT / "examples" / "sample_extraction.json"), "--no-tabpfn", "--json"])
+    out = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert out["estimate"]["method"] == "baseline"
+
+
+def test_estimate_markdown_default(capsys, monkeypatch):
+    # Keep the test fast and offline: pretend TabPFN is unavailable.
+    monkeypatch.setattr("builtins.__import__", _block_tabpfn(__import__))
+    code = cli.main(["estimate", str(ROOT / "examples" / "sample_extraction.json")])
+    assert code == 0
+    assert "## Price" in capsys.readouterr().out
+
+
+def _block_tabpfn(real):
+    def fake(name, *a, **k):
+        if name == "tabpfn" or name.startswith("tabpfn."):
+            raise ImportError("blocked for test")
+        return real(name, *a, **k)
+    return fake
