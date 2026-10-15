@@ -54,8 +54,10 @@ briefquote quote examples/briefs/saas-dashboard.txt --rate 50 --save-scope scope
 
 ```bash
 briefquote serve --open      # real model via Ollama, opens your browser
-briefquote serve --demo      # canned extraction, no Ollama needed (good for screenshots)
+briefquote serve --demo      # canned extraction, no Ollama needed
 ```
+
+Demo mode returns one canned extraction whatever brief you paste, so it is for trying the interface without Ollama running. The screenshot in this README comes from a real Gemma run.
 
 Options: `--port 8765`, `--model gemma3:1b`, `--history your.csv`, `--no-tabpfn`. Pick a sample brief or paste your own, set your hourly rate, and click Generate quote. The page shows the scope, an hours range (p10 to p90), the price, which estimator produced it, and buttons to copy or download the quote as Markdown. CPU inference can take a few minutes, so the page shows a live elapsed counter.
 

@@ -35,6 +35,7 @@ Remaining after iteration 2 (minor, not fixed):
 - saas risk flag calls dark mode "unclear acceptance criteria" (it is optional scope, wrong label).
 - shopify `client_timeline_days` is null though "a couple of weeks" could be read as 14; arguably acceptable.
 - shopify unknowns include padding ("client's experience with CSV files").
+- dental risk flag "unrealistic timeline" still flags "the sooner the better, ideally before the end of the year", although the brief says there is no fixed deadline.
 - `has_design_provided` correct on all three (true only for saas). `integrations_count` correct (dental 1, saas 2 Stripe+Supabase, shopify 1). Dental timeline and budget correctly null; saas 35 days and 6000 correct.
 
 ## What changed
@@ -51,16 +52,16 @@ Remaining after iteration 2 (minor, not fixed):
 
 `briefquote/schema.py`: complexity description now says "integer ... Must not exceed 5".
 
-Before/after on the failing briefs: saas went from invalid (complexity 8) to valid with 35 days and 6000.0 captured; shopify went from HTTP 500 to valid. Dental went from `mobile`/complexity 1 to `ai_automation`/complexity 3 and lost the invented timeline risk.
+Before/after on the failing briefs: saas went from invalid (complexity 8) to valid with 35 days and 6000.0 captured; shopify went from HTTP 500 to valid. Dental went from `mobile`/complexity 1 to `ai_automation`/complexity 3, but it still flags the client's "sooner the better" phrasing as an unrealistic timeline, which is a remaining defect.
 
 ## Is 4B good enough?
 
 Honestly, borderline but usable as a first draft. After tuning it produced valid JSON on 3 of 3 briefs, with correct hard facts (design provided, integrations, timeline, budget) and mostly grounded unknowns and risks. It is weak on judgement: complexity ratings are noisy (3 for everything), some unknowns are padding, risk labels are sometimes wrong, and results vary run to run, so three samples are not proof of reliability. It also fails in ways code must absorb: out-of-range numbers and Ollama aborting on repetition. About one minute per brief on CPU is acceptable. A human should review the extraction before quoting.
 
 Suggestions outside my edit scope:
-- `briefquote/llm.py`: treat HTTP 500 as a retryable failure (or catch it and retry once with `repeat_penalty` around 1.1 and `num_predict` bounded), instead of crashing with a traceback.
-- `briefquote/cli.py`: on Windows, stdout redirected to a file is written in the legacy code page (cp1252), so curly quotes made the saved JSON invalid UTF-8. Reconfigure stdout to UTF-8 (`sys.stdout.reconfigure(encoding="utf-8")`) or write with `ensure_ascii`. The committed outputs were re-encoded to UTF-8 from cp1252; content is unchanged.
-- Add a clamp or a JSON-schema `minimum`/`maximum` for complexity so constrained decoding enforces the range.
+- Done in `d484f4d`: `briefquote/llm.py` retries a 500 once with temperature 0.3 and repeat_penalty 1.2 and then raises ModelError (exercised only by tests with mocked responses, not against a real Ollama 500).
+- Done in `d484f4d`: `briefquote/cli.py` forces UTF-8 on stdout and stderr.
+- Done in `d484f4d`: `briefquote/schema.py` now emits minimum 1 and maximum 5 for complexity, and real Ollama accepted it (a real run on the SaaS brief returned valid JSON, complexity 3, in 55 seconds).
 
 ## gemma3:1b
 
