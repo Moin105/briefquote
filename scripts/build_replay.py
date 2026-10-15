@@ -193,7 +193,7 @@ BODY = """<main>
       <li>Run <code>briefquote serve --open</code></li>
     </ol>
     <p class="note">Built for the DEV Hacktoberfest Open-Source AI Challenge, Week 2.</p>
-    <p><a href="#" id="source">GitHub repository (link to be added)</a></p>
+    <p><a href="https://github.com/Moin105/briefquote" id="source">GitHub repository</a></p>
   </section>
 </main>"""
 

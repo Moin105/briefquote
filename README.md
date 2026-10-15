@@ -21,9 +21,11 @@ Quote from a client brief without the brief leaving your laptop. Paste a client 
 
 1. Install Ollama from <https://ollama.com>.
 2. Pull the model: `ollama pull gemma3:4b`. On CPU-only machines `gemma3:1b` is faster (use `--model gemma3:1b` or set `BRIEFQUOTE_MODEL`).
-3. Create a virtual environment and install:
+3. Clone the repository and create a virtual environment:
 
 ```bash
+git clone https://github.com/Moin105/briefquote.git
+cd briefquote
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -e ".[dev,estimator]"   # estimator extra installs TabPFN (pulls PyTorch)

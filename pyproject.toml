@@ -15,6 +15,10 @@ dependencies = ["pydantic>=2", "requests", "numpy", "pandas"]
 dev = ["pytest"]
 estimator = ["tabpfn>=2"]
 
+[project.urls]
+Repository = "https://github.com/Moin105/briefquote"
+Homepage = "https://github.com/Moin105/briefquote"
+
 [project.scripts]
 briefquote = "briefquote.cli:main"
 

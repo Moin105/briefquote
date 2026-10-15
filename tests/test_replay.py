@@ -55,15 +55,17 @@ def test_no_external_references(html):
     assert not re.search(r"<script[^>]+src\s*=", html, re.I)
     assert not re.search(r"<link[^>]+href\s*=", html, re.I)
     assert not re.search(r"<img[^>]+src\s*=", html, re.I)
-    assert not re.search(r"""(src|href)\s*=\s*["']\s*(https?:)?//""", html, re.I)
+    allowed = "https://github.com/Moin105/briefquote"
+    assert not re.search(
+        r"""(src|href)\s*=\s*["']\s*(?!""" + re.escape(allowed) + r"""["'])(https?:)?//""", html, re.I
+    )
     assert not re.search(r"url\(\s*[\"']?(https?:)?//", html, re.I)
     assert "fetch(" not in html and "XMLHttpRequest" not in html
 
 
 def test_required_content(html):
     assert "nothing here calls a model" in html
-    assert "GitHub repository (link to be added)" in html
-    assert 'href="#"' in html
+    assert 'href="https://github.com/Moin105/briefquote" id="source">GitHub repository</a>' in html
     assert "briefquote serve --open" in html
     assert "innerHTML" not in html
 
