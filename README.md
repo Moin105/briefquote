@@ -2,6 +2,8 @@
 
 [![tests](https://github.com/Moin105/briefquote/actions/workflows/tests.yml/badge.svg)](https://github.com/Moin105/briefquote/actions/workflows/tests.yml)
 
+Live replay of real runs, nothing to install: https://briefquote-replay.vercel.app
+
 Quote from a client brief without the brief leaving your laptop. Paste a client brief, and briefquote uses an open-weight model (Gemma, running locally through Ollama) to extract a structured scope as JSON: deliverables, tech stack, complexity, integrations, unknowns to ask the client, and risk flags.
 
 ## Why open-weight
@@ -83,7 +85,7 @@ Options: `--port 8765`, `--model gemma3:1b`, `--history your.csv`, `--no-tabpfn`
 
 ## Replay demo
 
-`site/` is a static, pre-computed replay of the three sample briefs. It shows the real Gemma extractions from `examples/outputs/` run through the real estimator and quote code (TabPFN where available), fitted on the 30 synthetic example jobs, so the numbers show how the pipeline works, not what a real freelancer's history would say. Nothing on the page calls a model; only the hourly-rate arithmetic is recomputed in the browser. The page is one self-contained file with no external requests. Regenerate it with:
+`site/` is a static, pre-computed replay of the three sample briefs. It shows the real Gemma extractions from `examples/outputs/` run through the real estimator and quote code (TabPFN where available), fitted on the 30 synthetic example jobs, so the numbers show how the pipeline works, not what a real freelancer's history would say. Nothing on the page calls a model; only the hourly-rate arithmetic is recomputed in the browser. The page is one self-contained file with no external requests. A deployed copy is at https://briefquote-replay.vercel.app. Regenerate it with:
 
 ```bash
 python scripts/build_replay.py      # add --no-tabpfn for the baseline estimator
