@@ -1,5 +1,7 @@
 # briefquote
 
+[![tests](https://github.com/Moin105/briefquote/actions/workflows/tests.yml/badge.svg)](https://github.com/Moin105/briefquote/actions/workflows/tests.yml)
+
 Quote from a client brief without the brief leaving your laptop. Paste a client brief, and briefquote uses an open-weight model (Gemma, running locally through Ollama) to extract a structured scope as JSON: deliverables, tech stack, complexity, integrations, unknowns to ask the client, and risk flags.
 
 ## Why open-weight
@@ -27,9 +29,12 @@ Quote from a client brief without the brief leaving your laptop. Paste a client 
 git clone https://github.com/Moin105/briefquote.git
 cd briefquote
 python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-pip install -e ".[dev,estimator]"   # estimator extra installs TabPFN (pulls PyTorch)
+source .venv/bin/activate        # Windows: .venv\Scripts\activate (Git Bash: source .venv/Scripts/activate)
+pip install -e ".[dev]"             # tests and the baseline estimator; takes a couple of minutes
+pip install -e ".[dev,estimator]"   # optional instead: also installs TabPFN (pulls PyTorch)
 ```
+
+Python 3.11 or newer is required. The `estimator` extra is optional: without it, estimates use the nearest-neighbour baseline and say so.
 
 Environment variables: `OLLAMA_HOST` (default `http://localhost:11434`), `BRIEFQUOTE_MODEL` (default `gemma3:4b`).
 
@@ -63,6 +68,8 @@ briefquote serve --demo      # canned extraction, no Ollama needed
 ```
 
 Demo mode returns one canned extraction whatever brief you paste, so it is for trying the interface without Ollama running. The screenshot in this README comes from a real Gemma run.
+
+The page talks to one endpoint, `POST /api/quote` with JSON like `{"brief": "...", "hourly_rate": 50}` (rate between 5 and 500); `GET /api/health` reports status.
 
 Options: `--port 8765`, `--model gemma3:1b`, `--history your.csv`, `--no-tabpfn`. Pick a sample brief or paste your own, set your hourly rate, and click Generate quote. The page shows the scope, an hours range (p10 to p90), the price, which estimator produced it, and buttons to copy or download the quote as Markdown. CPU inference can take a few minutes, so the page shows a live elapsed counter.
 
