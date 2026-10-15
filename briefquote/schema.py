@@ -19,7 +19,7 @@ class ScopeExtraction(BaseModel):
         description="Technologies, platforms or services explicitly mentioned in the brief."
     )
     complexity: int = Field(
-        description="Overall complexity from 1 (trivial) to 5 (very complex)."
+        description="Overall complexity as an integer from 1 (trivial) to 5 (very complex). Must not exceed 5."
     )
     integrations_count: int = Field(
         description="Number of third-party systems/APIs to integrate with (0 or more)."

@@ -1,0 +1,29 @@
+{
+  "summary": "Develop a WhatsApp bot for appointment reminders and patient interaction, integrating with DentFlow and providing a dashboard for reception staff.",
+  "project_type": "ai_automation",
+  "deliverables": [
+    "WhatsApp bot for appointment reminders and confirmations/cancellations/rescheduling",
+    "Simple dashboard for reception staff to track confirmations/no-shows"
+  ],
+  "tech_stack": [],
+  "complexity": 3,
+  "integrations_count": 1,
+  "has_design_provided": false,
+  "has_clear_requirements": false,
+  "unknowns": [
+    "What is the exact API availability of the DentFlow system?",
+    "What is the desired level of detail for the patient confirmation/cancellation/rescheduling functionality?",
+    "What are the specific GDPR compliance requirements beyond basic data handling?",
+    "What is the expected volume of patient interactions with the bot?",
+    "What is the desired level of detail for the dashboard?",
+    "What is the definition of 'simple page' for displaying patient information?"
+  ],
+  "risk_flags": [
+    "‘Eventually we would like the bot to take new bookings from people who have never been to the clinic’ - Potential scope creep for new booking functionality.",
+    "‘Maybe again two hours before the visit’ - Ambiguous timing for reminder sends.",
+    "‘the sooner the better, ideally before the end of the year’ - Unrealistic timeline.",
+    "‘We have not set a budget yet and would like to hear your suggestion first’ - Budget not defined."
+  ],
+  "client_timeline_days": null,
+  "budget_mentioned_usd": null
+}

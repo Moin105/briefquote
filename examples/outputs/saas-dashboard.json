@@ -1,0 +1,40 @@
+{
+  "summary": "Rebuild the customer-facing dashboard of a B2B SaaS project tracking agency profitability using Next.js, Supabase, and Stripe.",
+  "project_type": "web",
+  "deliverables": [
+    "Next.js dashboard rebuilt with App Router and TypeScript",
+    "Figma designs (14 screens)",
+    "Supabase integration with Postgres tables",
+    "Stripe integration for subscription plans and webhooks",
+    "Role-based access control (owner, manager, viewer)",
+    "CSV export functionality"
+  ],
+  "tech_stack": [
+    "Next.js",
+    "TypeScript",
+    "Tailwind",
+    "Supabase",
+    "Postgres",
+    "Stripe",
+    "Vercel"
+  ],
+  "complexity": 3,
+  "integrations_count": 2,
+  "has_design_provided": true,
+  "has_clear_requirements": false,
+  "unknowns": [
+    "List of bugs to be fixed in the API",
+    "Detailed requirements for the customer portal",
+    "Specific chart performance requirements beyond 'fast with a few thousand rows'",
+    "Acceptance criteria for the customer portal link",
+    "Details on the CSV export format"
+  ],
+  "risk_flags": [
+    "Client requesting additional bug fixes outside the initial scope - scope creep",
+    "Timeline of 5 weeks is aggressive for a full rebuild with integrations",
+    "Budget of $6,000 is potentially insufficient for the requested features and integrations",
+    "‘Dark mode would be nice but is not critical’ - unclear acceptance criteria"
+  ],
+  "client_timeline_days": 35,
+  "budget_mentioned_usd": 6000.0
+}

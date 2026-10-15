@@ -1,0 +1,34 @@
+{
+  "summary": "The client needs an AI tool to automatically generate product descriptions for their Shopify store selling ceramic mugs and planters.",
+  "project_type": "ai_automation",
+  "deliverables": [
+    "Product descriptions",
+    "SEO titles",
+    "Meta descriptions",
+    "CSV export of product descriptions"
+  ],
+  "tech_stack": [],
+  "complexity": 3,
+  "integrations_count": 1,
+  "has_design_provided": false,
+  "has_clear_requirements": false,
+  "unknowns": [
+    "What is the desired volume of product descriptions?",
+    "What is the client's definition of 'sounds like our brand'?",
+    "What is the client's experience with CSV files?",
+    "What is the client's understanding of 'locally run models'?",
+    "What is the client's definition of 'cheap'?",
+    "What is the client's timeline for the autumn collection launch?",
+    "What is the client's budget?",
+    "Does the client require translation of product descriptions?"
+  ],
+  "risk_flags": [
+    "Client states 'something working in a couple of weeks' - unrealistic timeline.",
+    "Client mentions 'locally run models' - unclear technology choice.",
+    "Client requests 'push the results straight into Shopify' - potential scope creep.",
+    "Client mentions 'Instagram captions later' - potential scope creep.",
+    "Client states 'Happy to discuss budget once I know what’s involved' - budget not defined."
+  ],
+  "client_timeline_days": null,
+  "budget_mentioned_usd": null
+}
