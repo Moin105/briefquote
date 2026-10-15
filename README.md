@@ -64,6 +64,8 @@ briefquote quote examples/briefs/saas-dashboard.txt --rate 50 --save-scope scope
 
 ![briefquote web UI showing a generated quote](docs/screenshot.png)
 
+*Result of a real run, rendered from the page content with a headless browser.*
+
 ![briefquote demo: a real Gemma run on the SaaS sample brief](docs/demo.gif)
 
 *Real run on CPU. The wait is shortened: the model took about a minute, and the elapsed counter in the frames is genuine. The history behind the estimate is synthetic example data.*
@@ -123,8 +125,12 @@ Checked on 8 real client briefs ([docs/real-brief-check.md](docs/real-brief-chec
 - The bundled history is synthetic, so prices and hours are illustration, not validated estimates.
 - The extraction is a checklist and clarifying-question generator, not a replacement for reading the brief.
 - Long briefs now raise Ollama's context window automatically, up to a limit; beyond it the tool errors and asks you to shorten or split the brief instead of silently truncating.
+- The prompt was tuned on the three sample briefs, so results on those are in-sample; the 8 real briefs are the only held-out check.
+- The client-facing Markdown includes an on-time probability sentence. With the bundled synthetic history it is an illustration, and for briefs the model marks as unclear it reads 5%; remove or ignore that line before sending anything to a client.
 
 ## Sample quote (trimmed)
+
+This comes from the hand-written reference scope in examples/sample_extraction.json, not from a model run.
 
 ```markdown
 # Project quote
@@ -169,6 +175,8 @@ The bundled history is synthetic (see `data/README.md`). Replace `data/past_jobs
 Cancelled jobs are ignored for hours and price but count toward the on-time probability. 20 or more rows work well. Do not trust estimates from the bundled synthetic file.
 
 ## Example output
+
+This comes from the hand-written reference scope in examples/sample_extraction.json, not from a model run.
 
 ```json
 {

@@ -7,7 +7,7 @@ The three example briefs in this repo were written by an AI for the demo. This i
 ## Method
 
 - Source: public Upwork job posts, read through a read-only job-search connector, all posted on 2026-10-14 or 2026-10-15.
-- Selection: software, AI/automation, data or web build posts with at least 80 words of description, from clients outside a short list of excluded countries. 8 briefs across data scraping, data engineering, AI automation, an AI agent and two website builds, including one long brief (763 words) and one very short, vague one (95 words).
+- Selection: software, AI/automation, data or web build posts with at least 80 words of description, with a few client countries skipped because of the author's own bidding preferences, which is a small selection bias. 8 briefs across data scraping, data engineering, AI automation, an AI agent and two website builds, including one long brief (763 words) and one very short, vague one (95 words).
 - Cleaning: client, company, product and people names, emails, phone numbers and URLs were replaced by `[removed]` before use. The cleaned texts were kept only in a scratch folder outside the repo and deleted afterwards. **The briefs are not republished here.** This file contains no quotes, job titles, client names or links.
 - Run: `briefquote quote <file> --save-scope <scope.json>` per brief, with real Gemma extraction.
 - Judging: I compared each extraction with its brief and tallied defects by severity (High: drops or misstates a large part of the scope; Medium: would mislead the quote or needs a real fix; Low: cosmetic, generic or arguable).
