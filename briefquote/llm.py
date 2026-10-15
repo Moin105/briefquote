@@ -15,6 +15,10 @@ class OllamaUnavailable(RuntimeError):
     """Raised when the local Ollama server cannot be reached."""
 
 
+class ModelError(RuntimeError):
+    """Raised when the model server answers with an error (e.g. aborted generation)."""
+
+
 class LLMClient(Protocol):
     def complete_json(self, system: str, user: str, schema: dict) -> str: ...
 
@@ -44,16 +48,30 @@ class OllamaClient(LLMClient):
             "format": schema,
             "options": {"temperature": 0.1},
         }
-        try:
-            resp = requests.post(f"{self.base_url}/api/chat", json=payload, timeout=self.timeout)
-        except (requests.ConnectionError, requests.Timeout) as exc:
-            raise OllamaUnavailable(f"{INSTALL_HINT}\n(details: {exc})") from exc
+        resp = self._post(payload)
+        if resp.status_code == 500:
+            retry = dict(payload)
+            retry["options"] = {"temperature": 0.3, "repeat_penalty": 1.2}
+            resp = self._post(retry)
         if resp.status_code == 404:
             raise OllamaUnavailable(
                 f"Model '{self.model}' not found. Run: ollama pull {self.model}"
             )
-        resp.raise_for_status()
+        if not 200 <= resp.status_code < 300:
+            body = (getattr(resp, "text", "") or "")[:300]
+            if resp.status_code == 500:
+                raise ModelError(
+                    "The model aborted generation (Ollama HTTP 500). Try again, or use a "
+                    f"different --model. Response: {body}"
+                )
+            raise ModelError(f"Ollama returned HTTP {resp.status_code}. Response: {body}")
         return resp.json()["message"]["content"]
+
+    def _post(self, payload: dict):
+        try:
+            return requests.post(f"{self.base_url}/api/chat", json=payload, timeout=self.timeout)
+        except (requests.ConnectionError, requests.Timeout) as exc:
+            raise OllamaUnavailable(f"{INSTALL_HINT}\n(details: {exc})") from exc
 
     def health(self) -> dict:
         result = {"reachable": False, "models": [], "model_present": False}

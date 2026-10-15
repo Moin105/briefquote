@@ -62,3 +62,43 @@ def _block_tabpfn(real):
             raise ImportError("blocked for test")
         return real(name, *a, **k)
     return fake
+
+
+def test_cli_model_error_no_traceback(monkeypatch, capsys):
+    from briefquote.llm import ModelError
+
+    class Boom:
+        def complete_json(self, *a, **k):
+            raise ModelError("model aborted generation")
+
+    monkeypatch.setattr(cli, "OllamaClient", lambda model=None: Boom())
+    code = cli.main(["extract", str(ROOT / "examples" / "briefs" / "saas-dashboard.txt")])
+    err = capsys.readouterr().err
+    assert code == 1 and err.startswith("error: ") and "Traceback" not in err
+
+
+def test_force_utf8_output_reconfigures(monkeypatch):
+    import io
+
+    buf = io.BytesIO()
+    fake = io.TextIOWrapper(buf, encoding="cp1252", errors="strict")
+    monkeypatch.setattr(cli.sys, "stdout", fake)
+    cli._force_utf8_output()
+    print("It\u2019s a scope \u2014 done", file=fake)
+    fake.flush()
+    assert buf.getvalue().decode("utf-8").strip() == "It\u2019s a scope \u2014 done"
+
+
+def test_estimate_redirected_stdout_is_utf8(tmp_path):
+    import subprocess
+    import sys
+
+    out = tmp_path / "out.json"
+    with open(out, "wb") as f:
+        r = subprocess.run(
+            [sys.executable, "-m", "briefquote", "estimate",
+             str(ROOT / "examples" / "sample_extraction.json"), "--json", "--no-tabpfn"],
+            stdout=f, cwd=ROOT,
+        )
+    assert r.returncode == 0
+    json.loads(out.read_bytes().decode("utf-8"))

@@ -9,7 +9,7 @@ from pathlib import Path
 from briefquote.estimate import BaselineEstimator, TabPFNEstimator, fit_estimator
 from briefquote.extract import ExtractionError, extract_scope
 from briefquote.features import load_history
-from briefquote.llm import FakeClient, OllamaClient, OllamaUnavailable
+from briefquote.llm import FakeClient, ModelError, OllamaClient, OllamaUnavailable
 from briefquote.quote import build_quote, render_markdown
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -107,6 +107,8 @@ class AppState:
             scope = extract_scope(brief, client)
         except OllamaUnavailable as exc:
             raise ApiError(503, str(exc)) from None
+        except ModelError as exc:
+            raise ApiError(502, str(exc)) from None
         except ExtractionError as exc:
             raw = (exc.last_output or "")[:MAX_RAW_CHARS]
             raise ApiError(

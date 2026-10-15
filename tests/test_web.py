@@ -134,3 +134,21 @@ def test_ollama_down_returns_503(monkeypatch):
         assert json.loads(body)["ollama"]["reachable"] is False
     finally:
         _stop(srv, t)
+
+
+def test_model_error_maps_to_502():
+    import pytest
+
+    from briefquote.llm import ModelError
+    from briefquote.web.server import ApiError, AppState
+
+    class Boom:
+        def complete_json(self, *a, **k):
+            raise ModelError("aborted")
+
+    state = AppState(demo=True, prefer_tabpfn=False)
+    state.demo = False
+    state.client = Boom()
+    with pytest.raises(ApiError) as ei:
+        state.make_quote({"brief": "x", "hourly_rate": 40})
+    assert ei.value.status == 502

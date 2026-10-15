@@ -19,9 +19,12 @@ class ScopeExtraction(BaseModel):
         description="Technologies, platforms or services explicitly mentioned in the brief."
     )
     complexity: int = Field(
+        ge=1,
+        le=5,
         description="Overall complexity as an integer from 1 (trivial) to 5 (very complex). Must not exceed 5."
     )
     integrations_count: int = Field(
+        ge=0,
         description="Number of third-party systems/APIs to integrate with (0 or more)."
     )
     has_design_provided: bool = Field(
@@ -41,6 +44,7 @@ class ScopeExtraction(BaseModel):
     )
     client_timeline_days: int | None = Field(
         default=None,
+        ge=1,
         description="Timeline in days if the client states one, otherwise null.",
     )
     budget_mentioned_usd: float | None = Field(

@@ -9,7 +9,7 @@ from pathlib import Path
 from briefquote.extract import ExtractionError, extract_scope
 from briefquote.estimate import fit_estimator
 from briefquote.features import load_history
-from briefquote.llm import OllamaClient, OllamaUnavailable
+from briefquote.llm import ModelError, OllamaClient, OllamaUnavailable
 from briefquote.quote import build_quote, render_markdown
 from briefquote.schema import ScopeExtraction
 
@@ -50,7 +50,7 @@ def _extract(args: argparse.Namespace) -> int:
     client = OllamaClient(model=args.model)
     try:
         scope = extract_scope(brief, client)
-    except (OllamaUnavailable, ExtractionError) as exc:
+    except (OllamaUnavailable, ModelError, ExtractionError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
     print(scope.model_dump_json(indent=2 if args.pretty else None))
@@ -96,7 +96,7 @@ def _quote(args: argparse.Namespace) -> int:
     client = OllamaClient(model=args.model)
     try:
         scope = extract_scope(brief, client)
-    except (OllamaUnavailable, ExtractionError) as exc:
+    except (OllamaUnavailable, ModelError, ExtractionError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
     if args.save_scope:
@@ -180,7 +180,14 @@ def build_parser() -> argparse.ArgumentParser:
     return p
 
 
+def _force_utf8_output() -> None:
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
+
+
 def main(argv: list[str] | None = None) -> int:
+    _force_utf8_output()
     args = build_parser().parse_args(argv)
     return args.func(args)
 

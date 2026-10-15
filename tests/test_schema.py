@@ -40,3 +40,10 @@ def test_negative_integrations_fails():
 def test_json_schema_for_llm_has_properties():
     schema = ScopeExtraction.json_schema_for_llm()
     assert "complexity" in schema["properties"]
+
+
+def test_json_schema_carries_complexity_bounds():
+    props = ScopeExtraction.json_schema_for_llm()["properties"]
+    assert props["complexity"]["minimum"] == 1
+    assert props["complexity"]["maximum"] == 5
+    assert props["integrations_count"]["minimum"] == 0
