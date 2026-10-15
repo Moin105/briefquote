@@ -68,6 +68,8 @@ Ollama's default context window is small and long inputs are cut silently. Measu
 | That brief repeated 3 times | 2,287 | about 4,400 | 3,771 | 3,771 at 8192 (same) |
 | That brief repeated 5 times | 3,811 | about 6,500 | **2,051 (cut)** | 5,879 at 16384 |
 
+Follow-up: the client now sets `num_ctx` automatically for long briefs (and raises a clear error when a brief is too long) instead of truncating silently. Measured on a synthetic 3,728-word brief (the saas-dashboard example repeated 16 times): the client chose `num_ctx` 16384 and the model read all 5,472 prompt tokens, not the roughly 2,051 it would have seen at the default; the direct API call took 52 s.
+
 My rough estimate overstates real token use by about 25 percent, because Gemma's tokenizer is more efficient than words x 1.4. Briefs up to about 2,300 words fit in the default window untouched. Somewhere between 2,300 and 3,800 words the input is truncated: the 3,811-word case reached the model as only 2,051 tokens, so the extraction would be made from a partial brief with no warning. Setting `options.num_ctx` fixes it (the full 5,879 tokens were read at 16384). Cost in seconds: 76 s to 110 s at 8192 for the 763-word brief, and 107 s to 202 s at 16384 for the 3,811-word input, though part of each difference is a model reload. Almost no real freelance brief is this long, so the practical risk is low, but it is silent when it happens. The 3,811-word case was a synthetic repeat of one brief and the exact cut-off point was not pinned down.
 
 ## Estimates and prices

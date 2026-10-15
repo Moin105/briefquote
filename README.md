@@ -113,6 +113,17 @@ TabPFN weights are gated: the first run needs a one-time license acceptance with
 $k = Read-Host "Paste TabPFN API key" -AsSecureString; $env:TABPFN_TOKEN = [System.Net.NetworkCredential]::new("", $k).Password; Remove-Variable k
 ```
 
+## Limitations
+
+Checked on 8 real client briefs ([docs/real-brief-check.md](docs/real-brief-check.md)), small and judged by one person:
+
+- All 8 returned valid output, but only 3 were usable as a first draft without major edits, and 2 dropped about half the scope.
+- Data work was labelled `ai_automation` 3 times, and the project type feeds the estimator.
+- Quoted client sentences appeared as risk flags in 4 of 8 briefs.
+- The bundled history is synthetic, so prices and hours are illustration, not validated estimates.
+- The extraction is a checklist and clarifying-question generator, not a replacement for reading the brief.
+- Long briefs now raise Ollama's context window automatically, up to a limit; beyond it the tool errors and asks you to shorten or split the brief instead of silently truncating.
+
 ## Sample quote (trimmed)
 
 ```markdown
