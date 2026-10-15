@@ -102,3 +102,42 @@ def test_estimate_redirected_stdout_is_utf8(tmp_path):
         )
     assert r.returncode == 0
     json.loads(out.read_bytes().decode("utf-8"))
+
+
+def _scope_path():
+    return str(ROOT / "examples" / "sample_extraction.json")
+
+
+def test_bundled_history_warns_on_stderr(capsys):
+    code = cli.main(["estimate", _scope_path(), "--no-tabpfn"])
+    cap = capsys.readouterr()
+    assert code == 0
+    assert "--history your_jobs.csv" in cap.err and "synthetic" in cap.err
+    assert cap.err.count("\n") == 1
+    assert "bundled example jobs (synthetic demo data, replace with your own history)" in cap.out
+    assert "synthetic" not in cap.err.split("warning:")[0]
+
+
+def test_custom_history_no_warning(capsys, tmp_path):
+    custom = tmp_path / "mine.csv"
+    custom.write_text((ROOT / "data" / "past_jobs.csv").read_text(encoding="utf-8"), encoding="utf-8")
+    code = cli.main(["estimate", _scope_path(), "--no-tabpfn", "--history", str(custom)])
+    cap = capsys.readouterr()
+    assert code == 0
+    assert cap.err == ""
+    assert "based on 30 past jobs" in cap.out and "synthetic" not in cap.out
+
+
+def test_serve_warns_for_bundled(monkeypatch, capsys):
+    class Srv:
+        server_address = ("127.0.0.1", 1)
+
+        def serve_forever(self):
+            raise KeyboardInterrupt
+
+        def server_close(self):
+            pass
+
+    monkeypatch.setattr("briefquote.web.server.create_server", lambda *a, **k: Srv())
+    assert cli.main(["serve", "--demo", "--no-tabpfn"]) == 0
+    assert "--history your_jobs.csv" in capsys.readouterr().err

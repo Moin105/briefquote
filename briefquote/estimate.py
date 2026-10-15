@@ -11,6 +11,7 @@ from briefquote.features import (
     FEATURE_COLUMNS,
     feature_matrix,
     featurize,
+    history_is_bundled,
     regression_rows,
 )
 from briefquote.schema import ScopeExtraction
@@ -33,6 +34,8 @@ class Estimate:
     method: Literal["tabpfn", "baseline"]
     n_history: int
     notes: list[str] = field(default_factory=list)
+    # True when the history is the synthetic data/past_jobs.csv shipped with briefquote.
+    history_is_bundled_example: bool = False
 
     def __post_init__(self) -> None:
         # Models can return crossing quantiles; keep p10 <= p50 <= p90.
@@ -63,9 +66,11 @@ class BaselineEstimator:
     def __init__(self, k: int = 5, notes: list[str] | None = None):
         self.k = k
         self.notes = list(notes or [])
+        self._bundled = False
         self._df: pd.DataFrame | None = None
 
     def fit(self, df: pd.DataFrame) -> "BaselineEstimator":
+        self._bundled = history_is_bundled(df)
         self._df = df.reset_index(drop=True)
         return self
 
@@ -98,6 +103,7 @@ class BaselineEstimator:
             method="baseline",
             n_history=len(self._df),
             notes=list(self.notes) + [f"nearest {len(nb)} past jobs used"],
+            history_is_bundled_example=self._bundled,
         )
 
 
@@ -107,6 +113,7 @@ class TabPFNEstimator:
     def __init__(self, device: str = "cpu"):
         self.device = device
         self._n = 0
+        self._bundled = False
         self._notes: list[str] = []
         try:
             import tabpfn  # noqa: F401
@@ -126,6 +133,7 @@ class TabPFNEstimator:
         from tabpfn import TabPFNClassifier, TabPFNRegressor
 
         self._n = len(df)
+        self._bundled = history_is_bundled(df)
         self._notes = []
         reg = regression_rows(df)
         X = feature_matrix(reg).values
@@ -169,6 +177,7 @@ class TabPFNEstimator:
             method="tabpfn",
             n_history=self._n,
             notes=list(self._notes),
+            history_is_bundled_example=self._bundled,
         )
 
 

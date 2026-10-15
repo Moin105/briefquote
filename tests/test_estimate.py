@@ -36,3 +36,12 @@ def test_tabpfn(history_path, sample_scope, monkeypatch):
     est = model.predict(sample_scope)
     _check(est)
     assert est.method == "tabpfn"
+
+
+def test_bundled_history_detected(history_path, sample_scope, tmp_path):
+    est = BaselineEstimator().fit(load_history(history_path)).predict(sample_scope)
+    assert est.history_is_bundled_example is True
+    custom = tmp_path / "mine.csv"
+    custom.write_text(history_path.read_text(encoding="utf-8"), encoding="utf-8")
+    est = BaselineEstimator().fit(load_history(custom)).predict(sample_scope)
+    assert est.history_is_bundled_example is False

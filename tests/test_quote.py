@@ -66,3 +66,23 @@ def test_small_history_wording(sample_scope):
     big = Estimate(60.0, 80.0, 110.0, 2000.0, 3100.0, 4500.0, 0.7, "baseline", 150, [])
     md = render_markdown(sample_scope, build_quote(sample_scope, big, 40))
     assert "small history" not in md
+
+
+def test_footnote_bundled_vs_custom(sample_scope):
+    bundled = Estimate(60.0, 80.0, 110.0, 2000.0, 3100.0, 4500.0, 0.7, "tabpfn", 30, [],
+                       history_is_bundled_example=True)
+    md = render_markdown(sample_scope, build_quote(sample_scope, bundled, 40))
+    assert ("_Method: tabpfn, based on 30 bundled example jobs "
+            "(synthetic demo data, replace with your own history)._") in md
+    assert "synthetic" in md and "Based on comparable past work" not in md
+    assert "based on 30 past jobs" not in md
+    custom = Estimate(60.0, 80.0, 110.0, 2000.0, 3100.0, 4500.0, 0.7, "tabpfn", 30, [])
+    md = render_markdown(sample_scope, build_quote(sample_scope, custom, 40))
+    assert "_Method: tabpfn, based on 30 past jobs._" in md
+    assert "synthetic" not in md
+    big = Estimate(60.0, 80.0, 110.0, 2000.0, 3100.0, 4500.0, 0.7, "baseline", 150, [])
+    assert "Based on comparable past work" in render_markdown(sample_scope, build_quote(sample_scope, big, 40))
+    big_bundled = Estimate(60.0, 80.0, 110.0, 2000.0, 3100.0, 4500.0, 0.7, "baseline", 150, [],
+                           history_is_bundled_example=True)
+    assert "Based on comparable past work" not in render_markdown(
+        sample_scope, build_quote(sample_scope, big_bundled, 40))

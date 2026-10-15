@@ -240,7 +240,7 @@ function render(d) {
   $("e-ontime").textContent = Math.round(e.on_time_probability * 100) + "%";
   $("e-method").textContent = e.method;
   $("e-method").className = "badge " + (e.method === "tabpfn" ? "tabpfn" : "");
-  $("e-hist").textContent = "based on " + e.n_history + " past jobs";
+  $("e-hist").textContent = e.history_is_bundled_example ? "example history (synthetic)" : "based on " + e.n_history + " past jobs";
   $("e-method").title = (e.notes || []).join("; ");
   $("p-rec").textContent = money(q.recommended_price);
   $("p-floor").textContent = money(q.price_floor);

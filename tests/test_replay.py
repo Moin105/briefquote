@@ -118,3 +118,10 @@ def test_js_rate_math_matches_build_quote(data, html, tmp_path):
     res = subprocess.run(["node", str(f)], capture_output=True, text=True, timeout=60)
     assert res.returncode == 0, res.stderr
     assert json.loads(res.stdout) == expected
+
+
+def test_replay_discloses_synthetic_history(data, html):
+    assert all(s["estimate"]["history_is_bundled_example"] for s in data["samples"])
+    assert "synthetic example data" in html
+    assert "example history (synthetic)" in html
+    assert all("synthetic demo data" in s["markdown"] for s in data["samples"])

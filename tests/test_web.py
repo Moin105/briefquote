@@ -152,3 +152,15 @@ def test_model_error_maps_to_502():
     with pytest.raises(ApiError) as ei:
         state.make_quote({"brief": "x", "hourly_rate": 40})
     assert ei.value.status == 502
+
+
+def test_quote_reports_bundled_history(demo):
+    status, body = _quote(demo)
+    assert status == 200
+    assert body["estimate"]["history_is_bundled_example"] is True
+    assert "bundled example jobs" in body["markdown"]
+
+
+def test_ui_badge_says_synthetic(demo):
+    _, html = _get(demo + "/")
+    assert "example history (synthetic)" in html

@@ -66,14 +66,23 @@ def render_markdown(scope: ScopeExtraction, quote: Quote) -> str:
         f"{e.hours_p10:g} to {e.hours_p90:g} hours.",
         "",
         (
-            f"Based on a small history of {e.n_history} past jobs, this is a rough guide: "
+            f"Based on a bundled example history of {e.n_history} synthetic jobs (not real past "
+            f"work), this is only an illustration: roughly a "
+            f"{e.on_time_probability * 100:.0f}% chance of delivering on time."
+            if e.history_is_bundled_example
+            else f"Based on a small history of {e.n_history} past jobs, this is a rough guide: "
             f"roughly a {e.on_time_probability * 100:.0f}% chance of delivering on time."
             if e.n_history < SMALL_HISTORY
             else f"Based on comparable past work, there is roughly a "
             f"{e.on_time_probability * 100:.0f}% chance of delivering on time."
         ),
         "",
-        f"_Method: {e.method}, based on {e.n_history} past jobs."
+        f"_Method: {e.method}, based on {e.n_history} "
+        + (
+            "bundled example jobs (synthetic demo data, replace with your own history)."
+            if e.history_is_bundled_example
+            else "past jobs."
+        )
         + (f" Note: {'; '.join(e.notes)}." if e.notes and e.method == "baseline" else "")
         + "_",
         "",

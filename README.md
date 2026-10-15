@@ -11,9 +11,11 @@ Quote from a client brief without the brief leaving your laptop. Paste a client 
 ## Status
 
 - **Day 1:** brief-to-scope extraction. Done.
-- **Day 2:** TabPFN-based hour and price estimator trained on your past jobs (`data/past_jobs.csv` is the seed dataset), plus a client-ready Markdown quote. Done.
+- **Day 2:** TabPFN-based hour and price estimator trained on your past jobs (`data/past_jobs.csv` is a **synthetic** example dataset, not real client work; see `data/README.md`), plus a client-ready Markdown quote. Done.
 - **Day 3:** local web UI (`briefquote serve`). Done.
-- **TabPFN path:** verified on real model weights on 2026-10-15 (`tabpfn-v3.5`, 30-job seed history).
+- **TabPFN path:** verified on real model weights on 2026-10-15 (`tabpfn-v3.5`, 30-row synthetic example history).
+
+**Important: the bundled history is synthetic.** `data/past_jobs.csv` holds 30 invented jobs written for the demo. They are not real client work and they encode simple rules (more complexity and integrations mean more hours; unclear requirements run late). Estimates are only meaningful after you replace it with your own history. briefquote warns on stderr and labels quotes, the web UI and the replay while the bundled file is in use.
 
 ## Setup
 
@@ -68,7 +70,7 @@ Options: `--port 8765`, `--model gemma3:1b`, `--history your.csv`, `--no-tabpfn`
 
 ## Replay demo
 
-`site/` is a static, pre-computed replay of the three sample briefs. It shows the real Gemma extractions from `examples/outputs/` run through the real estimator and quote code (TabPFN where available). Nothing on the page calls a model; only the hourly-rate arithmetic is recomputed in the browser. The page is one self-contained file with no external requests. Regenerate it with:
+`site/` is a static, pre-computed replay of the three sample briefs. It shows the real Gemma extractions from `examples/outputs/` run through the real estimator and quote code (TabPFN where available), fitted on the 30 synthetic example jobs, so the numbers show how the pipeline works, not what a real freelancer's history would say. Nothing on the page calls a model; only the hourly-rate arithmetic is recomputed in the browser. The page is one self-contained file with no external requests. Regenerate it with:
 
 ```bash
 python scripts/build_replay.py      # add --no-tabpfn for the baseline estimator
@@ -78,11 +80,15 @@ It is not deployed anywhere yet.
 
 ## How the estimate works
 
-[TabPFN](https://github.com/PriorLabs/TabPFN) is a pretrained transformer for small tabular datasets, so it works with 20 to 30 past jobs instead of thousands. briefquote fits it on your history (project type, complexity, deliverables, integrations, design provided, requirements clarity) to predict hours, price and the chance of delivering on time. Quantiles (p10, p50, p90) give a range rather than a single number. If TabPFN is not installed or its weights cannot be loaded, a nearest-neighbour baseline (k=5, no ML dependencies) is used and the quote says so.
+[TabPFN](https://github.com/PriorLabs/TabPFN) is a pretrained transformer for small tabular datasets, so it works with 20 to 30 past jobs instead of thousands. briefquote fits it on your history (the bundled 30-row file is synthetic example data; project type, complexity, deliverables, integrations, design provided, requirements clarity) to predict hours, price and the chance of delivering on time. Quantiles (p10, p50, p90) give a range rather than a single number. If TabPFN is not installed or its weights cannot be loaded, a nearest-neighbour baseline (k=5, no ML dependencies) is used and the quote says so.
 
 Each price point (floor, recommended, ceiling) is the average of the history-predicted price and `hours x rate x (1 + contingency)` at the p10, p50 and p90 quantile respectively, rounded to the nearest 50, so floor <= recommended <= ceiling always holds. Contingency is 10%, plus 10% when requirements are unclear, plus 5% per risk flag, capped at 35%. The reported on-time probability is clamped to 5% to 95%, and quotes built on fewer than 100 past jobs say they are a rough guide.
 
-**Before and after on the sample brief** (30 past jobs): the baseline gave 95 h (48.8 to 112 h) and 60% on time; TabPFN gave 91.9 h (80.1 to 102.4 h). TabPFN's range is much tighter, but 30 past jobs is tiny, its raw on-time figure (98%) is not believable and is clamped, and the numbers are a guide, not a promise.
+**Before and after on the sample brief** (30 synthetic example jobs, not real history): for the hand-written `examples/sample_extraction.json`, the baseline gave 95 h (48.8 to 112 h) and 60% on time; TabPFN gave 91.9 h (80.1 to 102.4 h). TabPFN's range is tighter, but that does not mean it is more accurate. The history is invented, so this only shows that the integration works and produces a range. Nothing here validates accuracy against real work.
+
+**Why the on-time figure swings.** The raw TabPFN on-time probability depends almost entirely on `has_clear_requirements`, because the synthetic data ties that flag to lateness: all 12 rows with unclear requirements are not delivered on time (0% delivered), versus 17 of 18 (94%) with clear requirements. With the same classifier and the same scope, raw on-time is 97.6% when the flag is true and 4.0% when it is false. Gemma's committed extraction of the SaaS brief (flag false) gives 3.7%, and the same extraction with only the flag set to true gives 94.1%. So the swing is one feature the synthetic data links to lateness. It is not instability, and it shows the classifier mostly learned the rule planted in the data. The reported figure is clamped to 5% to 95%.
+
+**The hours figures differ by extraction.** The 91.9 h figure is for the hand-written `examples/sample_extraction.json`. Gemma's own extractions of the same brief give different hours, and they also vary from run to run: a live run gave 59.2 h with a price of $2,700, and the committed extraction in `examples/outputs/saas-dashboard.json` gives 66.8 h with a price of $3,050.
 
 TabPFN weights are gated: the first run needs a one-time license acceptance with Prior Labs (a browser login, or set the `TABPFN_TOKEN` environment variable from <https://ux.priorlabs.ai>). Set `TABPFN_NO_BROWSER=1` to fail fast instead of opening a browser.
 
@@ -109,8 +115,8 @@ Rebuild a B2B SaaS customer dashboard in Next.js from existing Figma designs...
 
 ## Estimate
 Expected effort is about 95 hours, with a likely range of 48.8 to 112 hours.
-Based on a small history of 30 past jobs, this is a rough guide: roughly a 60% chance of delivering on time.
-_Method: baseline, based on 30 past jobs._
+Based on a bundled example history of 30 synthetic jobs (not real past work), this is only an illustration: roughly a 60% chance of delivering on time.
+_Method: baseline, based on 30 bundled example jobs (synthetic demo data, replace with your own history)._
 
 ## Price
 - Recommended: **$4,350**
@@ -122,7 +128,7 @@ Includes a 30% contingency (10% base, +10% if requirements are unclear, +5% per 
 
 ## Use your own history
 
-Replace `data/past_jobs.csv` (or pass `--history your.csv`). One row per finished job, with these columns:
+The bundled history is synthetic (see `data/README.md`). Replace `data/past_jobs.csv` (or pass `--history your.csv`). One row per finished job, with these columns:
 
 | column | meaning |
 | --- | --- |
@@ -136,7 +142,7 @@ Replace `data/past_jobs.csv` (or pass `--history your.csv`). One row per finishe
 | `price_usd` | what you charged |
 | `outcome` | `delivered`, `delivered_late` or `cancelled` |
 
-Cancelled jobs are ignored for hours and price but count toward the on-time probability. 20 or more rows work well.
+Cancelled jobs are ignored for hours and price but count toward the on-time probability. 20 or more rows work well. Do not trust estimates from the bundled synthetic file.
 
 ## Example output
 

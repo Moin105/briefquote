@@ -178,7 +178,8 @@ BODY = """<main>
     <ul>
       <li>Three sample briefs prove nothing about accuracy. This shows what the pipeline outputs, not that the numbers are right.</li>
       <li>A human must review every scope and quote before it goes to a client.</li>
-      <li>The seed history is only 30 past jobs, so estimates are a rough guide and the on-time figure is clamped to 5% to 95%.</li>
+      <li>The 30 jobs behind the estimates are synthetic example data, so the numbers show how the pipeline works, not what a real freelancer's history would say.</li>
+      <li>With only 30 rows, estimates are a rough guide and the on-time figure is clamped to 5% to 95%.</li>
       <li>TabPFN model weights are licensed for non-commercial use only. Selling quotes built with them needs a commercial TabPFN license, or use the baseline estimator.</li>
       <li>Nothing on this page calls a model. Results are pre-computed and stored in the page.</li>
     </ul>
@@ -201,7 +202,7 @@ function showSample(i) {
   current = i;
   const s = DATA.samples[i];
   $("brief").textContent = s.brief;
-  $("pill-method").textContent = "This sample: " + s.method + " estimator, " + s.n_history + " past jobs";
+  $("pill-method").textContent = "This sample: " + s.method + " estimator, " + (s.estimate.history_is_bundled_example ? "example history (synthetic)" : s.n_history + " past jobs");
   $("pill-method-wrap").className = "pill" + (s.method === "tabpfn" ? " ok" : "");
   update();
 }
@@ -212,7 +213,7 @@ function update() {
   const q = ok ? recompute(s, rate) : s.quote;
   render({ scope: s.scope, estimate: s.estimate, quote: q, markdown: ok ? markdownFor(s, q) : s.markdown });
 }
-$("banner").textContent = "Replay of real local runs (" + DATA.models.extraction + " via Ollama, TabPFN v3.5 on CPU) on the author's laptop. The real tool runs entirely on your machine; nothing here calls a model.";
+$("banner").textContent = "Replay of real local runs (" + DATA.models.extraction + " via Ollama, TabPFN v3.5 on CPU) on the author's laptop. The real tool runs entirely on your machine; nothing here calls a model. The 30 jobs behind the estimates are synthetic example data, so the numbers show how the pipeline works, not what a real freelancer's history would say.";
 $("pill-date").textContent = "Generated " + DATA.generated;
 $("pill-model").textContent = "Extraction: " + DATA.models.extraction + " (Ollama), tabpfn package " + DATA.models.tabpfn_package;
 DATA.samples.forEach((s, i) => {

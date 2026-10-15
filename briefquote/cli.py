@@ -8,7 +8,7 @@ from pathlib import Path
 
 from briefquote.extract import ExtractionError, extract_scope
 from briefquote.estimate import fit_estimator
-from briefquote.features import load_history
+from briefquote.features import BUNDLED_WARNING, is_bundled_history, load_history
 from briefquote.llm import ModelError, OllamaClient, OllamaUnavailable
 from briefquote.quote import build_quote, render_markdown
 from briefquote.schema import ScopeExtraction
@@ -57,7 +57,13 @@ def _extract(args: argparse.Namespace) -> int:
     return 0
 
 
+def _warn_if_bundled(history) -> None:
+    if is_bundled_history(history):
+        print(BUNDLED_WARNING, file=sys.stderr)
+
+
 def _estimate_and_print(scope: ScopeExtraction, args: argparse.Namespace) -> int:
+    _warn_if_bundled(args.history)
     try:
         history = load_history(args.history)
         est = fit_estimator(history, prefer_tabpfn=not args.no_tabpfn)
@@ -108,6 +114,7 @@ def _serve(args: argparse.Namespace) -> int:
     import os
 
     os.environ.setdefault("TABPFN_NO_BROWSER", "1")
+    _warn_if_bundled(args.history)
     from briefquote.web.server import create_server
 
     try:

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import get_args
 
 import pandas as pd
@@ -16,6 +17,25 @@ FEATURE_COLUMNS = [
     "has_design_provided",
     "has_clear_requirements",
 ]
+BUNDLED_HISTORY = (Path(__file__).resolve().parent.parent / "data" / "past_jobs.csv").resolve()
+BUNDLED_WARNING = (
+    "warning: using the bundled example history (data/past_jobs.csv), which is synthetic demo "
+    "data, not real client work. Pass --history your_jobs.csv to use your own past jobs."
+)
+
+
+def is_bundled_history(path) -> bool:
+    """True when `path` resolves to the synthetic example history shipped with briefquote."""
+    try:
+        return Path(path).resolve() == BUNDLED_HISTORY
+    except (OSError, ValueError, TypeError):
+        return False
+
+
+def history_is_bundled(df: pd.DataFrame) -> bool:
+    return bool(df.attrs.get("bundled_example", False))
+
+
 REQUIRED_COLUMNS = FEATURE_COLUMNS + ["hours_actual", "price_usd", "outcome"]
 
 
@@ -51,7 +71,9 @@ def load_history(path) -> pd.DataFrame:
     for c in ("has_design_provided", "has_clear_requirements"):
         df[c] = df[c].astype(str).str.strip().str.lower().isin(["true", "1", "yes"])
     df["outcome"] = df["outcome"].astype(str).str.strip().str.lower()
-    return df.reset_index(drop=True)
+    df = df.reset_index(drop=True)
+    df.attrs["bundled_example"] = is_bundled_history(path)
+    return df
 
 
 def regression_rows(df: pd.DataFrame) -> pd.DataFrame:
