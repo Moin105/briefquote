@@ -13,6 +13,7 @@ Quote from a client brief without the brief leaving your laptop. Paste a client 
 - **Day 1:** brief-to-scope extraction. Done.
 - **Day 2:** TabPFN-based hour and price estimator trained on your past jobs (`data/past_jobs.csv` is the seed dataset), plus a client-ready Markdown quote. Done.
 - **Day 3:** local web UI (`briefquote serve`). Done.
+- **TabPFN path:** verified on real model weights on 2026-10-15 (`tabpfn-v3.5`, 30-job seed history).
 
 ## Setup
 
@@ -69,9 +70,19 @@ Options: `--port 8765`, `--model gemma3:1b`, `--history your.csv`, `--no-tabpfn`
 
 [TabPFN](https://github.com/PriorLabs/TabPFN) is a pretrained transformer for small tabular datasets, so it works with 20 to 30 past jobs instead of thousands. briefquote fits it on your history (project type, complexity, deliverables, integrations, design provided, requirements clarity) to predict hours, price and the chance of delivering on time. Quantiles (p10, p50, p90) give a range rather than a single number. If TabPFN is not installed or its weights cannot be loaded, a nearest-neighbour baseline (k=5, no ML dependencies) is used and the quote says so.
 
-The recommended price is the average of the history-predicted price and `hours_p50 x rate x (1 + contingency)`, rounded to the nearest 50. Contingency is 10%, plus 10% when requirements are unclear, plus 5% per risk flag, capped at 35%.
+Each price point (floor, recommended, ceiling) is the average of the history-predicted price and `hours x rate x (1 + contingency)` at the p10, p50 and p90 quantile respectively, rounded to the nearest 50, so floor <= recommended <= ceiling always holds. Contingency is 10%, plus 10% when requirements are unclear, plus 5% per risk flag, capped at 35%. The reported on-time probability is clamped to 5% to 95%, and quotes built on fewer than 100 past jobs say they are a rough guide.
+
+**Before and after on the sample brief** (30 past jobs): the baseline gave 95 h (48.8 to 112 h) and 60% on time; TabPFN gave 91.9 h (80.1 to 102.4 h). TabPFN's range is much tighter, but 30 past jobs is tiny, its raw on-time figure (98%) is not believable and is clamped, and the numbers are a guide, not a promise.
 
 TabPFN weights are gated: the first run needs a one-time license acceptance with Prior Labs (a browser login, or set the `TABPFN_TOKEN` environment variable from <https://ux.priorlabs.ai>). Set `TABPFN_NO_BROWSER=1` to fail fast instead of opening a browser.
+
+**License note:** TabPFN model weights are licensed for non-commercial use only (Prior Labs states a commercial license must be requested separately). Anyone selling quotes built on briefquote must obtain a commercial TabPFN license or use the `--no-tabpfn` baseline, which has no such restriction. The briefquote code itself is MIT.
+
+**Windows setup note:** TabPFN's own browser login crashes on Windows with `WinError 10038` because its prompt uses `select` on stdin. Use an API key instead: accept the license at <https://platform.priorlabs.ai/account/licenses>, create a key under API Keys, and set it for the session without leaving it in command history:
+
+```powershell
+$k = Read-Host "Paste TabPFN API key" -AsSecureString; $env:TABPFN_TOKEN = [System.Net.NetworkCredential]::new("", $k).Password; Remove-Variable k
+```
 
 ## Sample quote (trimmed)
 
@@ -88,13 +99,13 @@ Rebuild a B2B SaaS customer dashboard in Next.js from existing Figma designs...
 
 ## Estimate
 Expected effort is about 95 hours, with a likely range of 48.8 to 112 hours.
-Based on comparable past work, there is roughly a 60% chance of delivering on time.
+Based on a small history of 30 past jobs, this is a rough guide: roughly a 60% chance of delivering on time.
 _Method: baseline, based on 30 past jobs._
 
 ## Price
 - Recommended: **$4,350**
-- Floor: $1,800
-- Ceiling: $4,650
+- Floor: $2,150
+- Ceiling: $5,250
 
 Includes a 30% contingency (10% base, +10% if requirements are unclear, +5% per risk flag, capped at 35%)...
 ```

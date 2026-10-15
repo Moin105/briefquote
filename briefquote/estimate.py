@@ -16,6 +16,9 @@ from briefquote.features import (
 from briefquote.schema import ScopeExtraction
 
 QUANTILES = [0.1, 0.5, 0.9]
+ON_TIME_MIN = 0.05
+ON_TIME_MAX = 0.95
+SMALL_HISTORY = 100
 
 
 @dataclass
@@ -30,6 +33,17 @@ class Estimate:
     method: Literal["tabpfn", "baseline"]
     n_history: int
     notes: list[str] = field(default_factory=list)
+
+    def __post_init__(self) -> None:
+        # Models can return crossing quantiles; keep p10 <= p50 <= p90.
+        self.hours_p10, self.hours_p50, self.hours_p90 = sorted(
+            (self.hours_p10, self.hours_p50, self.hours_p90)
+        )
+        self.price_p10, self.price_p50, self.price_p90 = sorted(
+            (self.price_p10, self.price_p50, self.price_p90)
+        )
+        # A classifier fit on a small history is never this certain.
+        self.on_time_probability = min(max(self.on_time_probability, ON_TIME_MIN), ON_TIME_MAX)
 
 
 class Estimator(Protocol):
@@ -151,7 +165,7 @@ class TabPFNEstimator:
         return Estimate(
             *_clean(h),
             *_clean(p),
-            on_time_probability=round(min(max(on_time, 0.0), 1.0), 3),
+            on_time_probability=round(on_time, 3),
             method="tabpfn",
             n_history=self._n,
             notes=list(self._notes),

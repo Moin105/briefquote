@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from briefquote.estimate import Estimate
+from briefquote.estimate import SMALL_HISTORY, Estimate
 from briefquote.schema import ScopeExtraction
 
 
@@ -33,14 +33,18 @@ def build_quote(scope: ScopeExtraction, estimate: Estimate, hourly_rate: float) 
     pct = contingency_pct(scope)
     mult = 1 + pct / 100.0
     rate_mid = estimate.hours_p50 * hourly_rate * mult
+
+    def blend(model_price: float, hours: float) -> float:
+        return _round50((model_price + hours * hourly_rate * mult) / 2.0)
+
     return Quote(
         estimate=estimate,
         hourly_rate=hourly_rate,
         contingency_pct=pct,
         rate_based_price_mid=round(rate_mid, 2),
-        recommended_price=_round50((estimate.price_p50 + rate_mid) / 2.0),
-        price_floor=_round50(estimate.price_p10),
-        price_ceiling=_round50(estimate.price_p90),
+        recommended_price=blend(estimate.price_p50, estimate.hours_p50),
+        price_floor=blend(estimate.price_p10, estimate.hours_p10),
+        price_ceiling=blend(estimate.price_p90, estimate.hours_p90),
     )
 
 
@@ -61,8 +65,13 @@ def render_markdown(scope: ScopeExtraction, quote: Quote) -> str:
         f"Expected effort is about {e.hours_p50:g} hours, with a likely range of "
         f"{e.hours_p10:g} to {e.hours_p90:g} hours.",
         "",
-        f"Based on comparable past work, there is roughly a {e.on_time_probability * 100:.0f}% "
-        "chance of delivering on time.",
+        (
+            f"Based on a small history of {e.n_history} past jobs, this is a rough guide: "
+            f"roughly a {e.on_time_probability * 100:.0f}% chance of delivering on time."
+            if e.n_history < SMALL_HISTORY
+            else f"Based on comparable past work, there is roughly a "
+            f"{e.on_time_probability * 100:.0f}% chance of delivering on time."
+        ),
         "",
         f"_Method: {e.method}, based on {e.n_history} past jobs."
         + (f" Note: {'; '.join(e.notes)}." if e.notes and e.method == "baseline" else "")
