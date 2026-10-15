@@ -62,6 +62,10 @@ briefquote quote examples/briefs/saas-dashboard.txt --rate 50 --save-scope scope
 
 ![briefquote web UI showing a generated quote](docs/screenshot.png)
 
+![briefquote demo: a real Gemma run on the SaaS sample brief](docs/demo.gif)
+
+*Real run on CPU. The wait is shortened: the model took about a minute, and the elapsed counter in the frames is genuine. The history behind the estimate is synthetic example data.*
+
 ```bash
 briefquote serve --open      # real model via Ollama, opens your browser
 briefquote serve --demo      # canned extraction, no Ollama needed
