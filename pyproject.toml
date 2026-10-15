@@ -19,7 +19,10 @@ estimator = ["tabpfn>=2"]
 briefquote = "briefquote.cli:main"
 
 [tool.setuptools]
-packages = ["briefquote"]
+packages = ["briefquote", "briefquote.web"]
+
+[tool.setuptools.package-data]
+"briefquote.web" = ["static/*.html"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

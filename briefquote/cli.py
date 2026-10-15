@@ -104,6 +104,39 @@ def _quote(args: argparse.Namespace) -> int:
     return _estimate_and_print(scope, args)
 
 
+def _serve(args: argparse.Namespace) -> int:
+    import os
+
+    os.environ.setdefault("TABPFN_NO_BROWSER", "1")
+    from briefquote.web.server import create_server
+
+    try:
+        srv = create_server(
+            args.port,
+            demo=args.demo,
+            model=args.model,
+            history=args.history,
+            prefer_tabpfn=not args.no_tabpfn,
+        )
+    except (OSError, ValueError) as exc:
+        print(f"error: cannot start server: {exc}", file=sys.stderr)
+        return 1
+    url = f"http://127.0.0.1:{srv.server_address[1]}"
+    print(f"briefquote web UI: {url}" + ("  (demo mode, no model)" if args.demo else ""), flush=True)
+    print("Listening on localhost only. Press Ctrl+C to stop.", flush=True)
+    if args.open:
+        import webbrowser
+
+        webbrowser.open(url)
+    try:
+        srv.serve_forever()
+    except KeyboardInterrupt:
+        print("\nStopping.")
+    finally:
+        srv.server_close()
+    return 0
+
+
 def _add_estimate_flags(p: argparse.ArgumentParser) -> None:
     p.add_argument("--history", default=str(DEFAULT_HISTORY), help="Past jobs CSV (default: data/past_jobs.csv)")
     p.add_argument("--rate", type=float, default=40.0, help="Hourly rate in USD (default 40)")
@@ -136,6 +169,14 @@ def build_parser() -> argparse.ArgumentParser:
     d = sub.add_parser("doctor", help="Check that Ollama and the model are ready")
     d.add_argument("--model", help="Ollama model to check")
     d.set_defaults(func=_doctor)
+    s = sub.add_parser("serve", help="Run the local web UI (localhost only)")
+    s.add_argument("--port", type=int, default=8765, help="Port (default 8765)")
+    s.add_argument("--demo", action="store_true", help="Canned extraction, no Ollama needed")
+    s.add_argument("--model", help="Ollama model")
+    s.add_argument("--history", default=str(DEFAULT_HISTORY), help="Past jobs CSV")
+    s.add_argument("--no-tabpfn", action="store_true", help="Use the baseline estimator only")
+    s.add_argument("--open", action="store_true", help="Open the browser")
+    s.set_defaults(func=_serve)
     return p
 
 

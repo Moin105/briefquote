@@ -12,7 +12,7 @@ Quote from a client brief without the brief leaving your laptop. Paste a client 
 
 - **Day 1:** brief-to-scope extraction. Done.
 - **Day 2:** TabPFN-based hour and price estimator trained on your past jobs (`data/past_jobs.csv` is the seed dataset), plus a client-ready Markdown quote. Done.
-- **Day 3:** web UI.
+- **Day 3:** local web UI (`briefquote serve`). Done.
 
 ## Setup
 
@@ -47,6 +47,21 @@ briefquote estimate examples/sample_extraction.json --no-tabpfn   # baseline onl
 # Full pipeline: brief -> scope (Ollama) -> estimate -> quote
 briefquote quote examples/briefs/saas-dashboard.txt --rate 50 --save-scope scope.json
 ```
+
+## Web UI
+
+![briefquote web UI showing a generated quote](docs/screenshot.png)
+
+```bash
+briefquote serve --open      # real model via Ollama, opens your browser
+briefquote serve --demo      # canned extraction, no Ollama needed (good for screenshots)
+```
+
+Options: `--port 8765`, `--model gemma3:1b`, `--history your.csv`, `--no-tabpfn`. Pick a sample brief or paste your own, set your hourly rate, and click Generate quote. The page shows the scope, an hours range (p10 to p90), the price, which estimator produced it, and buttons to copy or download the quote as Markdown. CPU inference can take a few minutes, so the page shows a live elapsed counter.
+
+**Privacy:** the server binds to `127.0.0.1` only, the page is a single file with no external requests (no CDN, fonts or analytics), and there is no telemetry. The brief goes from your browser to your local server to your local Ollama, and nowhere else.
+
+**Troubleshooting:** on Windows, a PowerShell window opened before you installed Ollama will not find it on PATH. Close it and open a new one. If the status pill says Ollama is not reachable, start Ollama and run `ollama pull gemma3:4b`.
 
 ## How the estimate works
 
