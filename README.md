@@ -91,8 +91,6 @@ Options: `--port 8765`, `--model gemma3:1b`, `--history your.csv`, `--no-tabpfn`
 python scripts/build_replay.py      # add --no-tabpfn for the baseline estimator
 ```
 
-It is not deployed anywhere yet.
-
 ## How the estimate works
 
 [TabPFN](https://github.com/PriorLabs/TabPFN) is a pretrained transformer for small tabular datasets, so it works with 20 to 30 past jobs instead of thousands. briefquote fits it on your history (the bundled 30-row file is synthetic example data; project type, complexity, deliverables, integrations, design provided, requirements clarity) to predict hours, price and the chance of delivering on time. Quantiles (p10, p50, p90) give a range rather than a single number. If TabPFN is not installed or its weights cannot be loaded, a nearest-neighbour baseline (k=5, no ML dependencies) is used and the quote says so.
