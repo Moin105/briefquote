@@ -66,6 +66,16 @@ Options: `--port 8765`, `--model gemma3:1b`, `--history your.csv`, `--no-tabpfn`
 
 **Troubleshooting:** on Windows, a PowerShell window opened before you installed Ollama will not find it on PATH. Close it and open a new one. If the status pill says Ollama is not reachable, start Ollama and run `ollama pull gemma3:4b`.
 
+## Replay demo
+
+`site/` is a static, pre-computed replay of the three sample briefs. It shows the real Gemma extractions from `examples/outputs/` run through the real estimator and quote code (TabPFN where available). Nothing on the page calls a model; only the hourly-rate arithmetic is recomputed in the browser. The page is one self-contained file with no external requests. Regenerate it with:
+
+```bash
+python scripts/build_replay.py      # add --no-tabpfn for the baseline estimator
+```
+
+It is not deployed anywhere yet.
+
 ## How the estimate works
 
 [TabPFN](https://github.com/PriorLabs/TabPFN) is a pretrained transformer for small tabular datasets, so it works with 20 to 30 past jobs instead of thousands. briefquote fits it on your history (project type, complexity, deliverables, integrations, design provided, requirements clarity) to predict hours, price and the chance of delivering on time. Quantiles (p10, p50, p90) give a range rather than a single number. If TabPFN is not installed or its weights cannot be loaded, a nearest-neighbour baseline (k=5, no ML dependencies) is used and the quote says so.

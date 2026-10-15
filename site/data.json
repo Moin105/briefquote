@@ -1,0 +1,237 @@
+{
+  "default_rate": 40.0,
+  "estimator_class": "TabPFNEstimator",
+  "generated": "2026-10-15",
+  "models": {
+    "briefquote": "0.1.0",
+    "estimator": "TabPFN v3.5 (CPU)",
+    "extraction": "gemma3:4b",
+    "extraction_runtime": "Ollama",
+    "tabpfn_package": "9.2.0"
+  },
+  "samples": [
+    {
+      "brief": "Hello,\n\nWe are a dental clinic with three dentists and about 1,800 active patients. Our reception team spends a huge part of the day calling patients to remind them about appointments, and we still get a lot of no-shows. We would like a WhatsApp bot that sends appointment reminders automatically and lets patients confirm, cancel or reschedule by replying.\n\nRight now our appointments live in a system called DentFlow, I think it has some kind of export but I am not sure about an API. The receptionist would know more. The reminders should go out the day before and maybe again two hours before the visit. Patients should also be able to ask simple things like opening hours, address and whether we take their insurance.\n\nIt must be GDPR compliant because we handle patient data, and nothing should be sent to anyone without consent. We would also like a simple page where the front desk can see which patients confirmed and which did not.\n\nEventually we would like the bot to take new bookings from people who have never been to the clinic, and maybe send follow-up messages after treatments with aftercare tips.\n\nWe do not have a fixed deadline but the sooner the better, ideally before the end of the year. We have not set a budget yet and would like to hear your suggestion first.\n\nRegards,\nDr. Keller's practice\n",
+      "estimate": {
+        "hours_p10": 22.3,
+        "hours_p50": 37.3,
+        "hours_p90": 58.6,
+        "method": "tabpfn",
+        "n_history": 30,
+        "notes": [],
+        "on_time_probability": 0.05,
+        "price_p10": 857.8,
+        "price_p50": 1434.4,
+        "price_p90": 2283.2
+      },
+      "id": "dental-whatsapp-bot",
+      "markdown": "# Project quote\n\n## Summary\n\nDevelop a WhatsApp bot for appointment reminders and patient interaction, integrating with DentFlow and providing a dashboard for reception staff.\n\n## Deliverables\n\n- WhatsApp bot for appointment reminders and confirmations/cancellations/rescheduling\n- Simple dashboard for reception staff to track confirmations/no-shows\n\n## Assumptions & open questions\n\n- What is the exact API availability of the DentFlow system?\n- What is the desired level of detail for the patient confirmation/cancellation/rescheduling functionality?\n- What are the specific GDPR compliance requirements beyond basic data handling?\n- What is the expected volume of patient interactions with the bot?\n- What is the desired level of detail for the dashboard?\n- What is the definition of 'simple page' for displaying patient information?\n\n## Estimate\n\nExpected effort is about 37.3 hours, with a likely range of 22.3 to 58.6 hours.\n\nBased on a small history of 30 past jobs, this is a rough guide: roughly a 5% chance of delivering on time.\n\n_Method: tabpfn, based on 30 past jobs._\n\n## Price\n\n- Recommended: **$1,700**\n- Floor: $1,050\n- Ceiling: $2,700\n\nIncludes a 35% contingency (10% base, +10% if requirements are unclear, +5% per risk flag, capped at 35%) on the hourly-rate estimate at $40/hour.\n\n## Risks\n\n- ‘Eventually we would like the bot to take new bookings from people who have never been to the clinic’ - Potential scope creep for new booking functionality.\n- ‘Maybe again two hours before the visit’ - Ambiguous timing for reminder sends.\n- ‘the sooner the better, ideally before the end of the year’ - Unrealistic timeline.\n- ‘We have not set a budget yet and would like to hear your suggestion first’ - Budget not defined.\n",
+      "method": "tabpfn",
+      "n_history": 30,
+      "quote": {
+        "contingency_pct": 35.0,
+        "estimate": {
+          "hours_p10": 22.3,
+          "hours_p50": 37.3,
+          "hours_p90": 58.6,
+          "method": "tabpfn",
+          "n_history": 30,
+          "notes": [],
+          "on_time_probability": 0.05,
+          "price_p10": 857.8,
+          "price_p50": 1434.4,
+          "price_p90": 2283.2
+        },
+        "hourly_rate": 40.0,
+        "price_ceiling": 2700.0,
+        "price_floor": 1050.0,
+        "rate_based_price_mid": 2014.2,
+        "recommended_price": 1700.0
+      },
+      "scope": {
+        "budget_mentioned_usd": null,
+        "client_timeline_days": null,
+        "complexity": 3,
+        "deliverables": [
+          "WhatsApp bot for appointment reminders and confirmations/cancellations/rescheduling",
+          "Simple dashboard for reception staff to track confirmations/no-shows"
+        ],
+        "has_clear_requirements": false,
+        "has_design_provided": false,
+        "integrations_count": 1,
+        "project_type": "ai_automation",
+        "risk_flags": [
+          "‘Eventually we would like the bot to take new bookings from people who have never been to the clinic’ - Potential scope creep for new booking functionality.",
+          "‘Maybe again two hours before the visit’ - Ambiguous timing for reminder sends.",
+          "‘the sooner the better, ideally before the end of the year’ - Unrealistic timeline.",
+          "‘We have not set a budget yet and would like to hear your suggestion first’ - Budget not defined."
+        ],
+        "summary": "Develop a WhatsApp bot for appointment reminders and patient interaction, integrating with DentFlow and providing a dashboard for reception staff.",
+        "tech_stack": [],
+        "unknowns": [
+          "What is the exact API availability of the DentFlow system?",
+          "What is the desired level of detail for the patient confirmation/cancellation/rescheduling functionality?",
+          "What are the specific GDPR compliance requirements beyond basic data handling?",
+          "What is the expected volume of patient interactions with the bot?",
+          "What is the desired level of detail for the dashboard?",
+          "What is the definition of 'simple page' for displaying patient information?"
+        ]
+      },
+      "title": "Dental WhatsApp bot"
+    },
+    {
+      "brief": "Hey there,\n\nI'm the founder of a B2B SaaS called Plotline that helps small agencies track project profitability. We have a working backend API but our customer-facing dashboard is a mess of old jQuery pages, and I want it rebuilt in Next.js (App Router, TypeScript, Tailwind).\n\nThe designs are done in Figma, 14 screens including login, onboarding, project list, project detail with profitability charts, team view, invoices and settings. I will share the file once we start.\n\nAuth and data should use Supabase (we already have a project set up with Postgres tables). Billing needs to go through Stripe: subscription plans with monthly and annual pricing, a customer portal link, and webhooks that update the plan status in Supabase. Users should be able to upgrade and downgrade themselves.\n\nCharts need to be fast with a few thousand rows. I would like role-based access (owner, manager, viewer) and a CSV export on the projects table. Dark mode would be nice but is not critical.\n\nDeployment is on Vercel. I need to be live in 5 weeks because we have a customer demo then, and I am hoping to keep things around $6,000 but I can be a little flexible if the scope really needs it.\n\nOh, and it would be great if you could also fix a few bugs in our current API while you are in there. I'll send a list.\n\nCheers,\nDaniel\n",
+      "estimate": {
+        "hours_p10": 51.6,
+        "hours_p50": 66.8,
+        "hours_p90": 88.2,
+        "method": "tabpfn",
+        "n_history": 30,
+        "notes": [],
+        "on_time_probability": 0.05,
+        "price_p10": 1946.8,
+        "price_p50": 2539.2,
+        "price_p90": 3375.3
+      },
+      "id": "saas-dashboard",
+      "markdown": "# Project quote\n\n## Summary\n\nRebuild the customer-facing dashboard of a B2B SaaS project tracking agency profitability using Next.js, Supabase, and Stripe.\n\n## Deliverables\n\n- Next.js dashboard rebuilt with App Router and TypeScript\n- Figma designs (14 screens)\n- Supabase integration with Postgres tables\n- Stripe integration for subscription plans and webhooks\n- Role-based access control (owner, manager, viewer)\n- CSV export functionality\n\n## Assumptions & open questions\n\n- List of bugs to be fixed in the API\n- Detailed requirements for the customer portal\n- Specific chart performance requirements beyond 'fast with a few thousand rows'\n- Acceptance criteria for the customer portal link\n- Details on the CSV export format\n\n## Estimate\n\nExpected effort is about 66.8 hours, with a likely range of 51.6 to 88.2 hours.\n\nBased on a small history of 30 past jobs, this is a rough guide: roughly a 5% chance of delivering on time.\n\n_Method: tabpfn, based on 30 past jobs._\n\n## Price\n\n- Recommended: **$3,050**\n- Floor: $2,350\n- Ceiling: $4,050\n\nIncludes a 35% contingency (10% base, +10% if requirements are unclear, +5% per risk flag, capped at 35%) on the hourly-rate estimate at $40/hour.\n\n## Risks\n\n- Client requesting additional bug fixes outside the initial scope - scope creep\n- Timeline of 5 weeks is aggressive for a full rebuild with integrations\n- Budget of $6,000 is potentially insufficient for the requested features and integrations\n- ‘Dark mode would be nice but is not critical’ - unclear acceptance criteria\n",
+      "method": "tabpfn",
+      "n_history": 30,
+      "quote": {
+        "contingency_pct": 35.0,
+        "estimate": {
+          "hours_p10": 51.6,
+          "hours_p50": 66.8,
+          "hours_p90": 88.2,
+          "method": "tabpfn",
+          "n_history": 30,
+          "notes": [],
+          "on_time_probability": 0.05,
+          "price_p10": 1946.8,
+          "price_p50": 2539.2,
+          "price_p90": 3375.3
+        },
+        "hourly_rate": 40.0,
+        "price_ceiling": 4050.0,
+        "price_floor": 2350.0,
+        "rate_based_price_mid": 3607.2,
+        "recommended_price": 3050.0
+      },
+      "scope": {
+        "budget_mentioned_usd": 6000.0,
+        "client_timeline_days": 35,
+        "complexity": 3,
+        "deliverables": [
+          "Next.js dashboard rebuilt with App Router and TypeScript",
+          "Figma designs (14 screens)",
+          "Supabase integration with Postgres tables",
+          "Stripe integration for subscription plans and webhooks",
+          "Role-based access control (owner, manager, viewer)",
+          "CSV export functionality"
+        ],
+        "has_clear_requirements": false,
+        "has_design_provided": true,
+        "integrations_count": 2,
+        "project_type": "web",
+        "risk_flags": [
+          "Client requesting additional bug fixes outside the initial scope - scope creep",
+          "Timeline of 5 weeks is aggressive for a full rebuild with integrations",
+          "Budget of $6,000 is potentially insufficient for the requested features and integrations",
+          "‘Dark mode would be nice but is not critical’ - unclear acceptance criteria"
+        ],
+        "summary": "Rebuild the customer-facing dashboard of a B2B SaaS project tracking agency profitability using Next.js, Supabase, and Stripe.",
+        "tech_stack": [
+          "Next.js",
+          "TypeScript",
+          "Tailwind",
+          "Supabase",
+          "Postgres",
+          "Stripe",
+          "Vercel"
+        ],
+        "unknowns": [
+          "List of bugs to be fixed in the API",
+          "Detailed requirements for the customer portal",
+          "Specific chart performance requirements beyond 'fast with a few thousand rows'",
+          "Acceptance criteria for the customer portal link",
+          "Details on the CSV export format"
+        ]
+      },
+      "title": "SaaS dashboard"
+    },
+    {
+      "brief": "Hi,\n\nI run a small Shopify store selling handmade ceramic mugs and planters. We have about 400 products and writing the descriptions by hand is killing me. I want an AI tool that generates product descriptions for us automatically. Ideally I upload a CSV with the product name, materials and a few keywords, and it gives me back a description for each product that sounds like our brand (warm, a bit playful, never salesy).\n\nIt should also write the SEO title and meta description for each product. It would be great if it could push the results straight into Shopify so I don't have to copy and paste, but if that's too much we can start with just a CSV export.\n\nI don't want to pay for ChatGPT API calls every time, so if there's a way to run it cheaply that would be amazing. My cousin said something about local models?\n\nSome of our products are sold in German and French too, so maybe it can handle translations at some point. Also I might want it to write Instagram captions later.\n\nI'd like to see something working in a couple of weeks because we're launching the autumn collection soon. Happy to discuss budget once I know what's involved. Please tell me how you would approach it and what you would need from me.\n\nThanks,\nMarta\n",
+      "estimate": {
+        "hours_p10": 37.6,
+        "hours_p50": 51.2,
+        "hours_p90": 68.4,
+        "method": "tabpfn",
+        "n_history": 30,
+        "notes": [],
+        "on_time_probability": 0.05,
+        "price_p10": 1420.8,
+        "price_p50": 1943.3,
+        "price_p90": 2633.8
+      },
+      "id": "shopify-descriptions",
+      "markdown": "# Project quote\n\n## Summary\n\nThe client needs an AI tool to automatically generate product descriptions for their Shopify store selling ceramic mugs and planters.\n\n## Deliverables\n\n- Product descriptions\n- SEO titles\n- Meta descriptions\n- CSV export of product descriptions\n\n## Assumptions & open questions\n\n- What is the desired volume of product descriptions?\n- What is the client's definition of 'sounds like our brand'?\n- What is the client's experience with CSV files?\n- What is the client's understanding of 'locally run models'?\n- What is the client's definition of 'cheap'?\n- What is the client's timeline for the autumn collection launch?\n- What is the client's budget?\n- Does the client require translation of product descriptions?\n\n## Estimate\n\nExpected effort is about 51.2 hours, with a likely range of 37.6 to 68.4 hours.\n\nBased on a small history of 30 past jobs, this is a rough guide: roughly a 5% chance of delivering on time.\n\n_Method: tabpfn, based on 30 past jobs._\n\n## Price\n\n- Recommended: **$2,350**\n- Floor: $1,750\n- Ceiling: $3,150\n\nIncludes a 35% contingency (10% base, +10% if requirements are unclear, +5% per risk flag, capped at 35%) on the hourly-rate estimate at $40/hour.\n\n## Risks\n\n- Client states 'something working in a couple of weeks' - unrealistic timeline.\n- Client mentions 'locally run models' - unclear technology choice.\n- Client requests 'push the results straight into Shopify' - potential scope creep.\n- Client mentions 'Instagram captions later' - potential scope creep.\n- Client states 'Happy to discuss budget once I know what’s involved' - budget not defined.\n",
+      "method": "tabpfn",
+      "n_history": 30,
+      "quote": {
+        "contingency_pct": 35.0,
+        "estimate": {
+          "hours_p10": 37.6,
+          "hours_p50": 51.2,
+          "hours_p90": 68.4,
+          "method": "tabpfn",
+          "n_history": 30,
+          "notes": [],
+          "on_time_probability": 0.05,
+          "price_p10": 1420.8,
+          "price_p50": 1943.3,
+          "price_p90": 2633.8
+        },
+        "hourly_rate": 40.0,
+        "price_ceiling": 3150.0,
+        "price_floor": 1750.0,
+        "rate_based_price_mid": 2764.8,
+        "recommended_price": 2350.0
+      },
+      "scope": {
+        "budget_mentioned_usd": null,
+        "client_timeline_days": null,
+        "complexity": 3,
+        "deliverables": [
+          "Product descriptions",
+          "SEO titles",
+          "Meta descriptions",
+          "CSV export of product descriptions"
+        ],
+        "has_clear_requirements": false,
+        "has_design_provided": false,
+        "integrations_count": 1,
+        "project_type": "ai_automation",
+        "risk_flags": [
+          "Client states 'something working in a couple of weeks' - unrealistic timeline.",
+          "Client mentions 'locally run models' - unclear technology choice.",
+          "Client requests 'push the results straight into Shopify' - potential scope creep.",
+          "Client mentions 'Instagram captions later' - potential scope creep.",
+          "Client states 'Happy to discuss budget once I know what’s involved' - budget not defined."
+        ],
+        "summary": "The client needs an AI tool to automatically generate product descriptions for their Shopify store selling ceramic mugs and planters.",
+        "tech_stack": [],
+        "unknowns": [
+          "What is the desired volume of product descriptions?",
+          "What is the client's definition of 'sounds like our brand'?",
+          "What is the client's experience with CSV files?",
+          "What is the client's understanding of 'locally run models'?",
+          "What is the client's definition of 'cheap'?",
+          "What is the client's timeline for the autumn collection launch?",
+          "What is the client's budget?",
+          "Does the client require translation of product descriptions?"
+        ]
+      },
+      "title": "Shopify descriptions"
+    }
+  ]
+}
